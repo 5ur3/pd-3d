@@ -6,6 +6,6 @@ Object *NewCubeObject() {
     Object *o = (Object *)malloc(sizeof(Object));
     o->geometry = NewCubeGeometry();
     o->pos = NewZeroV3();
-    o->rot = NewZeroV3();
+    o->rot = NewZeroQuaternion();
     return o;
 }

@@ -2,6 +2,7 @@
 #include "../scene/scene.h"
 #include "../screen/screen.h"
 #include "../util/consts.h"
+#include "../rotation/quaternion.h"
 
 typedef struct ScreenPosition {
     float x;
@@ -69,12 +70,14 @@ void RenderVerticies(Scene *s, Camera *c, Screen *target) {
 
         for (int j = 0; j < o->geometry->vCount; j++) {
             Vector3 *v = &o->geometry->v[j];
-            Vector3 *vpos = NewSumV3(o->pos, v);
+            Vector3 *rotatedV = NewRotatedV3(v, o->rot);
+            Vector3 *vpos = NewSumV3(o->pos, rotatedV);
             ScreenPosition *projection = newCameraProjection(vpos, c);
             if (projection->valid) {
                 SetSquare(target, projection->x, projection->y, 2, 1);
             }
 
+            free(rotatedV);
             free(vpos);
             free(projection);
         }
@@ -87,15 +90,18 @@ void RenderMesh(Scene *s, Camera *c, Screen *target) {
 
         for (int j = 0; j < o->geometry->fCount; j++) {
             Vector3 *va = &o->geometry->v[o->geometry->f[j].a];
-            Vector3 *vposa = NewSumV3(o->pos, va);
+            Vector3 *rotatedva = NewRotatedV3(va, o->rot);
+            Vector3 *vposa = NewSumV3(o->pos, rotatedva);
             ScreenPosition *projectiona = newCameraProjection(vposa, c);
 
             Vector3 *vb = &o->geometry->v[o->geometry->f[j].b];
-            Vector3 *vposb = NewSumV3(o->pos, vb);
+            Vector3 *rotatedvb = NewRotatedV3(vb, o->rot);
+            Vector3 *vposb = NewSumV3(o->pos, rotatedvb);
             ScreenPosition *projectionb = newCameraProjection(vposb, c);
 
             Vector3 *vc = &o->geometry->v[o->geometry->f[j].c];
-            Vector3 *vposc = NewSumV3(o->pos, vc);
+            Vector3 *rotatedvc = NewRotatedV3(vc, o->rot);
+            Vector3 *vposc = NewSumV3(o->pos, rotatedvc);
             ScreenPosition *projectionc = newCameraProjection(vposc, c);
 
             if (projectiona->valid && projectionb->valid) {
@@ -112,10 +118,13 @@ void RenderMesh(Scene *s, Camera *c, Screen *target) {
             }
 
             free(vposa);
+            free(rotatedva);
             free(projectiona);
             free(vposb);
+            free(rotatedvb);
             free(projectionb);
             free(vposc);
+            free(rotatedvc);
             free(projectionc);
         }
     }

@@ -13,6 +13,7 @@ Vector3 *NewSumV3(Vector3 *a, Vector3 *b);
 Vector3 *NewDiffV3(Vector3 *a, Vector3 *b);
 Vector3 *NewMulV3(Vector3 *v, float s);
 Vector3 *NewCopyV3(Vector3 *source);
+Vector3 *NewNormalizedV3(Vector3 *vector);
 float GetV3Dot(Vector3 *a, Vector3 *b);
 float GetV3SquaredLength(Vector3 *vector);
 float GetV3SquaredDistance(Vector3 *a, Vector3 *b);

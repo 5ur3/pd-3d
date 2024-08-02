@@ -8,6 +8,7 @@
 #include "renderer/renderer.h"
 #include "scene/scene.h"
 #include "screen/screen.h"
+#include "util/consts.h"
 
 static int update(void *userdata);
 
@@ -19,6 +20,7 @@ Camera *camera;
 Object *cube;
 float camX = 0;
 float camZ = 0;
+Quaternion* q;
 
 int eventHandler(PlaydateAPI *playdate, PDSystemEvent event, uint32_t arg) {
     if (event == kEventInit) {
@@ -28,6 +30,9 @@ int eventHandler(PlaydateAPI *playdate, PDSystemEvent event, uint32_t arg) {
         SetV3Values(cube->pos, 0, 0, 5);
         AddObjectToScene(scene, cube);
         camera = NewDefaultCamera();
+
+        Vector3 qv = {1, 2, 3};
+        q = NewQuaternion(&qv, PI / 100);
 
         playdate->system->setUpdateCallback(update, NULL);
         pd = playdate;
@@ -56,6 +61,9 @@ static int update(void *userdata) {
 
     camera->pos->x = camX;
     camera->pos->z = camZ;
+
+    MulQuaternion(cube->rot, q);
+    
     FillScreen(screen, 0);
     RenderVerticies(scene, camera, screen);
     RenderMesh(scene, camera, screen);

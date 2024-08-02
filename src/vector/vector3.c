@@ -30,6 +30,12 @@ Vector3 *NewMulV3(Vector3 *v, float s) {
     return c;
 }
 
+Vector3 *NewNormalizedV3(Vector3 *v) {
+    Vector3 *nv = NewCopyV3(v);
+    NormalizeV3(nv);
+    return nv;
+}
+
 float GetV3Dot(Vector3 *a, Vector3 *b) {
     return a->x * b->x + a->y * b->y + a->z * b->z;
 }
@@ -62,8 +68,11 @@ void MulV3(Vector3 *v, float s) {
 }
 
 void NormalizeV3(Vector3 *v) {
-    float len = sqrtf(GetV3SquaredLength(v));
-    MulV3(v, 1.0f / len);
+    float squaredLength = GetV3SquaredLength(v);
+    if (squaredLength == 1) {
+        return;
+    }
+    MulV3(v, 1.0f / sqrtf(squaredLength));
 }
 
 int EqualV3(Vector3 *a, Vector3 *b) {

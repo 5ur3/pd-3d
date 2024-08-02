@@ -2,10 +2,11 @@
 
 #include "../geometry/geometry.h"
 #include "../vector/vector3.h"
+#include "../rotation/quaternion.h"
 
 typedef struct Object {
     Vector3 *pos;
-    Vector3 *rot;
+    Quaternion *rot;
     Geometry *geometry;
 } Object;
 

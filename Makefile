@@ -28,7 +28,8 @@ SRC = src/main.c \
 		src/camera/camera.c \
 		src/object/object.c \
 		src/scene/scene.c \
-		src/renderer/renderer.c
+		src/renderer/renderer.c \
+		src/rotation/quaternion.c	
 
 # List all user directories here
 UINCDIR = 

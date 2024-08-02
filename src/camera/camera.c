@@ -4,31 +4,34 @@
 
 void invalidateVectors(Camera *c) {
     if (c->cVectors.forward == NULL ||
-        !EqualV3(c->rot, c->cVectors.updatedForRot)) {
+        !EqualQuaternion(c->rot, c->cVectors.updatedForRot)) {
         free(c->cVectors.updatedForRot);
-        if (c->cVectors.forward != NULL) {
-            free(c->cVectors.forward);
-            free(c->cVectors.right);
-            free(c->cVectors.up);
+        if (c->cVectors.forward == NULL) {
+            c->cVectors.forward = NewZeroV3();
+            c->cVectors.right = NewZeroV3();
+            c->cVectors.up = NewZeroV3();
         }
-        // TODO: propertly recalculate
-        c->cVectors.updatedForRot = NewCopyV3(c->rot);
-        c->cVectors.forward = NewV3(0, 0, 1);
-        c->cVectors.right = NewV3(1, 0, 0);
-        c->cVectors.up = NewV3(0, 1, 0);
+        c->cVectors.updatedForRot = NewCopyQuaternion(c->rot);
+
+        Vector3 f = {0, 0, 1};
+        Vector3 r = {1, 0, 0};
+        Vector3 u = {0, 1, 1};
+        MoveAndDeleteV3(c->cVectors.forward, NewRotatedV3(&f, c->rot));
+        MoveAndDeleteV3(c->cVectors.right, NewRotatedV3(&r, c->rot));
+        MoveAndDeleteV3(c->cVectors.up, NewRotatedV3(&u, c->rot));
     }
 }
 
 Camera *NewCamera(float xFov, float depth) {
     Camera *c = (Camera *)malloc(sizeof(Camera));
     c->pos = NewZeroV3();
-    c->rot = NewZeroV3();
+    c->rot = NewZeroQuaternion();
     c->xFov = xFov;
     c->depth = depth;
     c->cVectors.forward = NULL;
     c->cVectors.up = NULL;
     c->cVectors.right = NULL;
-    c->cVectors.updatedForRot = NewZeroV3();
+    c->cVectors.updatedForRot = NewZeroQuaternion();
     invalidateVectors(c);
     return c;
 }

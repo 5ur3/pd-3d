@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 Quaternion *NewZeroQuaternion() {
-    Quaternion* q = (Quaternion *)malloc(sizeof(Quaternion));
+    Quaternion *q = (Quaternion *)malloc(sizeof(Quaternion));
     q->x = 0;
     q->y = 0;
     q->z = 0;
@@ -40,19 +40,19 @@ Quaternion *NewInvertedQuaternion(Quaternion *q) {
 }
 
 Quaternion *NewMulV3Quaternion(Quaternion *q, Vector3 *v) {
-    Quaternion* res = NewCopyQuaternion(q);
+    Quaternion *res = NewCopyQuaternion(q);
     MulV3Quaternion(res, v);
     return res;
 }
 
 Quaternion *NewMulQuaternion(Quaternion *a, Quaternion *b) {
-    Quaternion* res = NewCopyQuaternion(a);
+    Quaternion *res = NewCopyQuaternion(a);
     MulQuaternion(res, b);
     return res;
 }
 
-Vector3* NewRotatedV3(Vector3* v, Quaternion*q) {
-    Vector3* res = NewCopyV3(v);
+Vector3 *NewRotatedV3(Vector3 *v, Quaternion *q) {
+    Vector3 *res = NewCopyV3(v);
     RotateV3(res, q);
     return res;
 }
@@ -101,4 +101,21 @@ void MulQuaternion(Quaternion *q, Quaternion *by) {
     q->x = res.x;
     q->y = res.y;
     q->z = res.z;
+}
+
+float EqualQuaternion(Quaternion *a, Quaternion *b) {
+    return a->w == b->w && a->x == b->x && a->y == b->y && a->z == b->z;
+}
+
+void SetQuaternionValues(Quaternion *q, float x, float y, float z,
+                         float angle) {
+    Vector3 *v = NewV3(x, y, z);
+    NormalizeV3(v);
+    angle /= 2.0f;
+    q->w = cosf(angle);
+    float s = sinf(angle);
+    q->x = v->x * s;
+    q->y = v->y * s;
+    q->z = v->z * s;
+    free(v);
 }

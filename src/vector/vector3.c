@@ -100,7 +100,7 @@ float GetLineDistance(Vector3 *point, Vector3 *from, Vector3 *lineNorm) {
     return d;
 }
 
-void MoveAndDeleteV3(Vector3 *target, Vector3* source) {
+void MoveAndDeleteV3(Vector3 *target, Vector3 *source) {
     memcpy(target, source, sizeof(Vector3));
     free(source);
 }

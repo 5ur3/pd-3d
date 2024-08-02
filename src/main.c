@@ -61,6 +61,7 @@ static int update(void *userdata) {
 
     camera->pos->x = camX;
     camera->pos->z = camZ;
+    SetQuaternionValues(camera->rot, 1, 0, 0, pd->system->getCrankAngle() / 180.0f * PI);
 
     MulQuaternion(cube->rot, q);
 

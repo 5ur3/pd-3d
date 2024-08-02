@@ -1,11 +1,11 @@
 #ifndef __OBJECT
 
 #include "../geometry/geometry.h"
-#include "../vector/vector3.h"
 #include "../rotation/quaternion.h"
+#include "../vector/vector3.h"
 
 typedef struct objectCache {
-    Vector3* verticies;
+    Vector3 *verticies;
     uint16_t hash;
 } objectCache;
 
@@ -18,8 +18,8 @@ typedef struct Object {
 } Object;
 
 Object *NewCubeObject(void);
-Vector3* GetObjectVerticies(Object* o);
-uint16_t GetObjectVerticiesCount(Object* o);
+Vector3 *GetObjectVerticies(Object *o);
+uint16_t GetObjectVerticiesCount(Object *o);
 
 #define __OBJECT
 #endif

@@ -20,7 +20,7 @@ Camera *camera;
 Object *cube;
 float camX = 0;
 float camZ = 0;
-Quaternion* q;
+Quaternion *q;
 
 int eventHandler(PlaydateAPI *playdate, PDSystemEvent event, uint32_t arg) {
     if (event == kEventInit) {
@@ -63,9 +63,8 @@ static int update(void *userdata) {
     camera->pos->z = camZ;
 
     MulQuaternion(cube->rot, q);
-    
+
     FillScreen(screen, 0);
-    RenderVerticies(scene, camera, screen);
     RenderMesh(scene, camera, screen);
     DrawScreen(screen);
 

@@ -23,6 +23,7 @@ void MulV3(Vector3 *v, float s);
 void NormalizeV3(Vector3 *v);
 float GetLineDistance(Vector3 *point, Vector3 *from, Vector3 *lineNorm);
 int EqualV3(Vector3 *a, Vector3 *b);
+void MoveAndDeleteV3(Vector3 *target, Vector3* source);
 
 #define __VECTOR3
 #endif

@@ -33,7 +33,7 @@ Camera *NewCamera(float xFov, float depth) {
     return c;
 }
 
-Camera *NewDefaultCamera() { return NewCamera(100.0f / 180.0f * PI, 100.0f); }
+Camera *NewDefaultCamera() { return NewCamera(60.0f / 180.0f * PI, 100.0f); }
 
 Vector3 *GetCameraForward(Camera *c) {
     invalidateVectors(c);

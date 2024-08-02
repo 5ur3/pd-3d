@@ -1,3 +1,6 @@
 *.zip
 *.pdx
 build
+Source/pdex.elf
+Source/pdex.dylib
+.DS_Store

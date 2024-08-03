@@ -5,6 +5,7 @@
 
 void RenderVerticies(Scene *s, Camera *c, Screen *target);
 void RenderMesh(Scene *s, Camera *c, Screen *target);
+void Render(Scene *s, Camera *c, Screen *target);
 
 #define __RENDERER
 #endif

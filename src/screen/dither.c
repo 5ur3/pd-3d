@@ -1,3 +1,4 @@
+#include "point.h"
 #include "screen.h"
 #include <stdlib.h>
 
@@ -67,4 +68,17 @@ void SetDitheredPixel(Screen *s, short x, short y, uint16_t brighness) {
     } else {
         SetPixel(s, x, y, 0);
     }
+}
+
+points *getTrianglePoints(int x1, int y1, int x2, int y2, int x3, int y3);
+
+void DrawDitheredTriangle(Screen *s, int x1, int y1, int x2, int y2, int x3,
+                          int y3, uint16_t brighness) {
+    points *ps = getTrianglePoints(x1, y1, x2, y2, x3, y3);
+    int len = ps->len;
+    for (int i = 0; i < len; i++) {
+        SetDitheredPixel(s, ps->points[i].x, ps->points[i].y, brighness);
+    }
+    free(ps->points);
+    free(ps);
 }

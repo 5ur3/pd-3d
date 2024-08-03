@@ -44,35 +44,30 @@ int eventHandler(PlaydateAPI *playdate, PDSystemEvent event, uint32_t arg) {
 #define SPEED 0.05f
 #define R 2
 static int update(void *userdata) {
-    // PDButtons current;
-    // pd->system->getButtonState(&current, NULL, NULL);
-    // if (current & kButtonLeft) {
-    //     camX -= SPEED;
-    // }
-    // if (current & kButtonRight) {
-    //     camX += SPEED;
-    // }
-    // if (current & kButtonUp) {
-    //     camZ += SPEED;
-    // }
-    // if (current & kButtonDown) {
-    //     camZ -= SPEED;
-    // }
-
-    // camera->pos->x = camX;
-    // camera->pos->z = camZ;
-    // SetQuaternionValues(camera->rot, 1, 0, 0, pd->system->getCrankAngle() / 180.0f * PI);
-
-    // MulQuaternion(cube->rot, q);
-
-    // FillScreen(screen, 0);
-    // RenderMesh(scene, camera, screen);
-
-    for (short y = 0; y < 240; y++) {
-        for (short x = 0; x < 400; x++) {
-            SetDitheredPixel(screen, x, y, x / 400.0 * (screen->ditherMaxBrightness + 1));
-        }
+    PDButtons current;
+    pd->system->getButtonState(&current, NULL, NULL);
+    if (current & kButtonLeft) {
+        camX -= SPEED;
     }
+    if (current & kButtonRight) {
+        camX += SPEED;
+    }
+    if (current & kButtonUp) {
+        camZ += SPEED;
+    }
+    if (current & kButtonDown) {
+        camZ -= SPEED;
+    }
+
+    camera->pos->x = camX;
+    camera->pos->z = camZ;
+    SetQuaternionValues(camera->rot, 1, 0, 0,
+                        pd->system->getCrankAngle() / 180.0f * PI);
+
+    MulQuaternion(cube->rot, q);
+
+    FillScreen(screen, 0);
+    Render(scene, camera, screen);
 
     DrawScreen(screen);
 

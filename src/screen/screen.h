@@ -25,6 +25,10 @@ void FillScreen(Screen *s, int enabled);
 void SetSquare(Screen *s, int x, int y, int size, int enabled);
 void DrawLine(Screen *s, float x1, float y1, float x2, float y2, int enabled);
 void SetDitheredPixel(Screen *s, short x, short y, uint16_t brighness);
+void DrawTriangle(Screen *s, int x1, int y1, int x2, int y2, int x3, int y3,
+                  int enabled);
+void DrawDitheredTriangle(Screen *s, int x1, int y1, int x2, int y2, int x3,
+                          int y3, uint16_t brighness);
 
 #define __SCREEN
 #endif

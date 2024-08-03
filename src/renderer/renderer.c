@@ -123,3 +123,36 @@ void RenderMesh(Scene *s, Camera *c, Screen *target) {
         }
     }
 }
+
+void Render(Scene *s, Camera *c, Screen *target) {
+    for (int i = 0; i < s->objectsLen; i++) {
+        Object *o = s->objects[i];
+
+        Vector3* verticies = GetObjectVerticies(o);
+        for (int j = 0; j < o->geometry->fCount; j++) {
+            Vector3 *va = &verticies[o->geometry->f[j].a];
+            Vector3 *vposa = NewSumV3(o->pos, va);
+            ScreenPosition *projectiona = newCameraProjection(vposa, c);
+
+            Vector3 *vb = &verticies[o->geometry->f[j].b];
+            Vector3 *vposb = NewSumV3(o->pos, vb);
+            ScreenPosition *projectionb = newCameraProjection(vposb, c);
+
+            Vector3 *vc = &verticies[o->geometry->f[j].c];
+            Vector3 *vposc = NewSumV3(o->pos, vc);
+            ScreenPosition *projectionc = newCameraProjection(vposc, c);
+
+            if (projectiona->valid && projectionb->valid && projectionc->valid) {
+                DrawDitheredTriangle(target, projectiona->x, projectiona->y, projectionb->x,
+                         projectionb->y, projectionc->x, projectionc->y, target->ditherMaxBrightness / 4.0 * 3.5);
+            }
+
+            free(vposa);
+            free(projectiona);
+            free(vposb);
+            free(projectionb);
+            free(vposc);
+            free(projectionc);
+        }
+    }
+}

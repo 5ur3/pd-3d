@@ -2,6 +2,8 @@
 #include "screen.h"
 #include "pd_api.h"
 
+void setSquaredBayerDither(Screen *s, uint16_t rank);
+
 Screen *NewScreen(PlaydateAPI *pd) {
     LCDBitmap *lcdbm = pd->graphics->newBitmap(SCREEN_WIDTH, SCREEN_HEIGTH, 0);
     uint8_t *bm = NULL;
@@ -10,6 +12,7 @@ Screen *NewScreen(PlaydateAPI *pd) {
     screen->lcdbm = lcdbm;
     screen->bm = bm;
     screen->pd = pd;
+    setSquaredBayerDither(screen, 3);
     return screen;
 }
 

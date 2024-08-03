@@ -23,6 +23,7 @@ VPATH += src
 # List C source files here
 SRC = src/main.c \
 		src/screen/screen.c \
+		src/screen/dither.c \
 		src/vector/vector3.c \
 		src/geometry/geometry.c \
 		src/camera/camera.c \

@@ -10,6 +10,8 @@ typedef struct Screen {
     LCDBitmap *lcdbm;
     uint8_t *bm;
     PlaydateAPI *pd;
+    uint16_t ditherMap[SCREEN_HEIGTH][SCREEN_WIDTH];
+    uint16_t ditherMaxBrightness;
 } Screen;
 
 Screen *NewScreen(PlaydateAPI *pd);
@@ -22,6 +24,7 @@ void FillScreen(Screen *s, int enabled);
              : (s->bm[bmindex(x, y)] &= ~bmmask(x)))
 void SetSquare(Screen *s, int x, int y, int size, int enabled);
 void DrawLine(Screen *s, float x1, float y1, float x2, float y2, int enabled);
+void SetDitheredPixel(Screen *s, short x, short y, uint16_t brighness);
 
 #define __SCREEN
 #endif

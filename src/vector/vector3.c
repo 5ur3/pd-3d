@@ -68,6 +68,12 @@ void MulV3(Vector3 *v, float s) {
     v->z *= s;
 }
 
+void AddV3(Vector3 *v, Vector3 *add) {
+    v->x += add->x;
+    v->y += add->y;
+    v->z += add->z;
+}
+
 void NormalizeV3(Vector3 *v) {
     float squaredLength = GetV3SquaredLength(v);
     if (squaredLength == 1) {
@@ -103,4 +109,12 @@ float GetLineDistance(Vector3 *point, Vector3 *from, Vector3 *lineNorm) {
 void MoveAndDeleteV3(Vector3 *target, Vector3 *source) {
     memcpy(target, source, sizeof(Vector3));
     free(source);
+}
+
+Vector3 *NewCrossProductV3(Vector3 *a, Vector3 *b) {
+    Vector3 *res = NewZeroV3();
+    res->x = a->y * b->z - a->z * b->y;
+    res->y = a->z * b->x - a->x * b->z;
+    res->z = a->x * b->y - a->y * b->x;
+    return res;
 }

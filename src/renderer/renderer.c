@@ -1,8 +1,8 @@
 #include "../camera/camera.h"
+#include "../rotation/quaternion.h"
 #include "../scene/scene.h"
 #include "../screen/screen.h"
 #include "../util/consts.h"
-#include "../rotation/quaternion.h"
 
 typedef struct ScreenPosition {
     float x;
@@ -45,7 +45,7 @@ ScreenPosition *newCameraProjection(Vector3 *pos, Camera *cam) {
         sqrtf(GetV3SquaredLength(projectionCenterOffset));
     float rightCos = GetV3Dot(projectionCenterOffset, GetCameraRight(cam)) /
                      sqrtf(GetV3SquaredLength(projectionCenterOffset));
-    int isDown = GetV3Dot(projectionCenterOffset, GetCameraUp(cam)) < 0;
+    int isDown = GetV3Dot(projectionCenterOffset, GetCameraUp(cam)) > 0;
     float angle = acosf(rightCos);
     float halfScreen = tanf(cam->xFov / 2) * projectionDistance;
 
@@ -69,7 +69,7 @@ void RenderVerticies(Scene *s, Camera *c, Screen *target) {
         Object *o = s->objects[i];
 
         uint16_t vCount = GetObjectVerticiesCount(o);
-        Vector3* verticies = GetObjectVerticies(o);
+        Vector3 *verticies = GetObjectVerticies(o);
         for (int j = 0; j < vCount; j++) {
             Vector3 *vpos = NewSumV3(o->pos, &verticies[j]);
             ScreenPosition *projection = newCameraProjection(vpos, c);
@@ -87,7 +87,7 @@ void RenderMesh(Scene *s, Camera *c, Screen *target) {
     for (int i = 0; i < s->objectsLen; i++) {
         Object *o = s->objects[i];
 
-        Vector3* verticies = GetObjectVerticies(o);
+        Vector3 *verticies = GetObjectVerticies(o);
         for (int j = 0; j < o->geometry->fCount; j++) {
             Vector3 *va = &verticies[o->geometry->f[j].a];
             Vector3 *vposa = NewSumV3(o->pos, va);
@@ -128,23 +128,57 @@ void Render(Scene *s, Camera *c, Screen *target) {
     for (int i = 0; i < s->objectsLen; i++) {
         Object *o = s->objects[i];
 
-        Vector3* verticies = GetObjectVerticies(o);
+        Vector3 *verticies = GetObjectVerticies(o);
         for (int j = 0; j < o->geometry->fCount; j++) {
             Vector3 *va = &verticies[o->geometry->f[j].a];
             Vector3 *vposa = NewSumV3(o->pos, va);
-            ScreenPosition *projectiona = newCameraProjection(vposa, c);
 
             Vector3 *vb = &verticies[o->geometry->f[j].b];
             Vector3 *vposb = NewSumV3(o->pos, vb);
-            ScreenPosition *projectionb = newCameraProjection(vposb, c);
 
             Vector3 *vc = &verticies[o->geometry->f[j].c];
             Vector3 *vposc = NewSumV3(o->pos, vc);
+
+            Vector3 *ba = NewDiffV3(vposa, vposb);
+            Vector3 *ca = NewDiffV3(vposa, vposc);
+            Vector3 *norm = NewCrossProductV3(ba, ca);
+            NormalizeV3(norm);
+
+            Vector3 *avg = NewZeroV3();
+            AddV3(avg, vposa);
+            AddV3(avg, vposb);
+            AddV3(avg, vposc);
+            MulV3(avg, 1.0f / 3.0f);
+
+            Vector3 *fromCamera = NewDiffV3(avg, c->pos);
+            NormalizeV3(fromCamera);
+
+            float dotFromCamera = GetV3Dot(norm, fromCamera);
+
+            if (dotFromCamera <= 0) {
+                free(vposa);
+                free(vposb);
+                free(vposc);
+                free(ba);
+                free(ca);
+                free(norm);
+                free(avg);
+                free(fromCamera);
+                continue;
+            }
+
+            float dot = GetV3Dot(norm, GetCameraForward(c));
+
+            ScreenPosition *projectiona = newCameraProjection(vposa, c);
+            ScreenPosition *projectionb = newCameraProjection(vposb, c);
             ScreenPosition *projectionc = newCameraProjection(vposc, c);
 
-            if (projectiona->valid && projectionb->valid && projectionc->valid) {
-                DrawDitheredTriangle(target, projectiona->x, projectiona->y, projectionb->x,
-                         projectionb->y, projectionc->x, projectionc->y, target->ditherMaxBrightness / 4.0 * 3.5);
+            if (projectiona->valid && projectionb->valid &&
+                projectionc->valid) {
+                DrawDitheredTriangle(
+                    target, projectiona->x, projectiona->y, projectionb->x,
+                    projectionb->y, projectionc->x, projectionc->y,
+                    roundf(target->ditherMaxBrightness * (dot * .8f + 0.2f)));
             }
 
             free(vposa);
@@ -153,6 +187,11 @@ void Render(Scene *s, Camera *c, Screen *target) {
             free(projectionb);
             free(vposc);
             free(projectionc);
+            free(ba);
+            free(ca);
+            free(norm);
+            free(avg);
+            free(fromCamera);
         }
     }
 }

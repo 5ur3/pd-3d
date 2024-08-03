@@ -32,7 +32,7 @@ int eventHandler(PlaydateAPI *playdate, PDSystemEvent event, uint32_t arg) {
         camera = NewDefaultCamera();
 
         Vector3 qv = {1, 2, 3};
-        q = NewQuaternion(&qv, PI / 100);
+        q = NewQuaternion(&qv, PI / 50);
 
         playdate->system->setUpdateCallback(update, NULL);
         pd = playdate;

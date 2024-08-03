@@ -81,7 +81,6 @@ void DrawLine(Screen *s, float x1, float y1, float x2, float y2, int enabled) {
     }
 }
 
-
 #define min(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define max(X, Y) (((X) > (Y)) ? (X) : (Y))
 
@@ -102,6 +101,13 @@ void addPointsOfHorizontalLine(points *ps, int x1, int x2, int y) {
         swap(x1, x2);
     }
 
+    if (x1 < 0) {
+        x1 = 0;
+    }
+    if (x2 >= SCREEN_WIDTH) {
+        x2 = SCREEN_WIDTH - 1;
+    }
+
     for (int i = x1; i <= x2; i++) {
         ps->points[ps->len].x = i;
         ps->points[ps->len++].y = y;
@@ -117,7 +123,9 @@ void addPointsOfBottomFlatTriangle(points *ps, float x1, float y1, float x2,
     float curx2 = x1;
 
     for (int scanlineY = y1; scanlineY <= y2; scanlineY++) {
-        addPointsOfHorizontalLine(ps, curx1, curx2, scanlineY);
+        if (scanlineY >= 0 && scanlineY < SCREEN_HEIGTH) {
+            addPointsOfHorizontalLine(ps, curx1, curx2, scanlineY);
+        }
         curx1 += invslope1;
         curx2 += invslope2;
     }
@@ -132,7 +140,9 @@ void addPointsOfTopFlatTriangle(points *ps, float x1, float y1, float x2,
     float curx2 = x3;
 
     for (int scanlineY = y3; scanlineY >= y1; scanlineY--) {
-        addPointsOfHorizontalLine(ps, curx1, curx2, scanlineY);
+        if (scanlineY >= 0 && scanlineY < SCREEN_HEIGTH) {
+            addPointsOfHorizontalLine(ps, curx1, curx2, scanlineY);
+        }
         curx1 -= invslope1;
         curx2 -= invslope2;
     }
@@ -144,7 +154,6 @@ points *getTrianglePoints(int x1, int y1, int x2, int y2, int x3, int y3) {
     uint32_t boundingRectArea = (max3(x1, x2, x3) - min3(x1, x2, x3) + 1) *
                                 (max3(y1, y2, y3) - min3(y1, y2, y3) + 1);
     ps->points = (point *)malloc(sizeof(point) * boundingRectArea);
-    // s->pd->system->logToConsole("%u", boundingRectArea);
     ps->len = 0;
 
     if (y1 > y2) {

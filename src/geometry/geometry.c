@@ -34,16 +34,16 @@ Geometry *NewCubeGeometry() {
     g->fCount = 12;
     g->f = (GeometryFace *)malloc(sizeof(GeometryFace) * 12);
     SetGeometryFace(&g->f[0], 0, 1, 2);
-    SetGeometryFace(&g->f[1], 1, 2, 3);
-    SetGeometryFace(&g->f[2], 4, 5, 6);
+    SetGeometryFace(&g->f[1], 1, 3, 2);
+    SetGeometryFace(&g->f[2], 4, 6, 5);
     SetGeometryFace(&g->f[3], 5, 6, 7);
-    SetGeometryFace(&g->f[4], 0, 1, 4);
+    SetGeometryFace(&g->f[4], 0, 4, 1);
     SetGeometryFace(&g->f[5], 1, 4, 5);
     SetGeometryFace(&g->f[6], 2, 3, 6);
-    SetGeometryFace(&g->f[7], 3, 6, 7);
+    SetGeometryFace(&g->f[7], 3, 7, 6);
     SetGeometryFace(&g->f[8], 0, 2, 4);
-    SetGeometryFace(&g->f[9], 2, 4, 6);
-    SetGeometryFace(&g->f[10], 1, 3, 5);
+    SetGeometryFace(&g->f[9], 2, 6, 4);
+    SetGeometryFace(&g->f[10], 1, 5, 3);
     SetGeometryFace(&g->f[11], 3, 5, 7);
 
     return g;

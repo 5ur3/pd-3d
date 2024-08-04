@@ -1,6 +1,8 @@
 #ifndef __GEOMETRY
 
 #include "../vector/vector3.h"
+#define TARGET_EXTENSION 1
+#include "pd_api.h"
 #include <stdint.h>
 
 typedef struct GeometryFace {
@@ -17,6 +19,7 @@ typedef struct Geometry {
 extern Geometry CubeGeometry;
 extern Geometry EmptyGeometry;
 
+Geometry *LoadObj(PlaydateAPI *pd, const char *path);
 void InitDefaultGeometry(void);
 
 #define __GEOMETRY

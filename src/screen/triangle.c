@@ -94,7 +94,7 @@ points *getTrianglePoints(int x1, int y1, int x2, int y2, int x3, int y3) {
         h = SCREEN_HEIGTH;
     }
     uint32_t boundingRectArea = (w + 1) * (h + 1);
-    ps->points = (point *)malloc(sizeof(point) * boundingRectArea);
+    ps->points = (point *)malloc(sizeof(point) * boundingRectArea * 2);
     ps->len = 0;
 
     if (y1 > y2) {

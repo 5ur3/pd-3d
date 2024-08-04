@@ -15,7 +15,7 @@ void invalidateVectors(Camera *c) {
 
         Vector3 f = {0, 0, 1};
         Vector3 r = {1, 0, 0};
-        Vector3 u = {0, 1, 1};
+        Vector3 u = {0, 1, 0};
         MoveAndDeleteV3(c->cVectors.forward, NewRotatedV3(&f, c->rot));
         MoveAndDeleteV3(c->cVectors.right, NewRotatedV3(&r, c->rot));
         MoveAndDeleteV3(c->cVectors.up, NewRotatedV3(&u, c->rot));

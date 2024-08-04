@@ -27,6 +27,7 @@ SRC = src/main.c \
 		src/screen/triangle.c \
 		src/vector/vector3.c \
 		src/geometry/geometry.c \
+		src/geometry/obj.c \
 		src/camera/camera.c \
 		src/object/object.c \
 		src/scene/scene.c \

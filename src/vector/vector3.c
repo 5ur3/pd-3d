@@ -76,7 +76,7 @@ void AddV3(Vector3 *v, Vector3 *add) {
 
 void NormalizeV3(Vector3 *v) {
     float squaredLength = GetV3SquaredLength(v);
-    if (squaredLength == 1) {
+    if (squaredLength == 1 || squaredLength == 0) {
         return;
     }
     MulV3(v, 1.0f / sqrtf(squaredLength));

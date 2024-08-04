@@ -43,8 +43,11 @@ ScreenPosition *newCameraProjection(Vector3 *pos, Camera *cam) {
 
     float projectionCenterDistance =
         sqrtf(GetV3SquaredLength(projectionCenterOffset));
-    float rightCos = GetV3Dot(projectionCenterOffset, GetCameraRight(cam)) /
-                     sqrtf(GetV3SquaredLength(projectionCenterOffset));
+    float rightCos = 0;
+    if (projectionCenterDistance > 0) {
+        rightCos = GetV3Dot(projectionCenterOffset, GetCameraRight(cam)) /
+                   sqrtf(GetV3SquaredLength(projectionCenterOffset));
+    }
     int isDown = GetV3Dot(projectionCenterOffset, GetCameraUp(cam)) > 0;
     float angle = acosf(rightCos);
     float halfScreen = tanf(cam->xFov / 2) * projectionDistance;
@@ -74,7 +77,7 @@ void RenderVerticies(Scene *s, Camera *c, Screen *target) {
             Vector3 *vpos = NewSumV3(o->pos, &verticies[j]);
             ScreenPosition *projection = newCameraProjection(vpos, c);
             if (projection->valid) {
-                SetSquare(target, projection->x, projection->y, 2, 1);
+                SetSquare(target, projection->x, projection->y, 0, 1);
             }
 
             free(vpos);
@@ -140,7 +143,7 @@ void Render(Scene *s, Camera *c, Screen *target) {
             Vector3 *vposc = NewSumV3(o->pos, vc);
 
             Vector3 *ba = NewDiffV3(vposa, vposb);
-            Vector3 *ca = NewDiffV3(vposa, vposc);
+            Vector3 *ca = NewDiffV3(vposc, vposa);
             Vector3 *norm = NewCrossProductV3(ba, ca);
             NormalizeV3(norm);
 

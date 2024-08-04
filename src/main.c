@@ -4,6 +4,7 @@
 #include "pd_api.h"
 
 #include "camera/camera.h"
+#include "geometry/geometry.h"
 #include "object/object.h"
 #include "renderer/renderer.h"
 #include "scene/scene.h"
@@ -17,18 +18,22 @@ PlaydateAPI *pd;
 Screen *screen;
 Scene *scene;
 Camera *camera;
-Object *cube;
+Object *object;
 float camX = 0;
 float camZ = 0;
 Quaternion *q;
 
 int eventHandler(PlaydateAPI *playdate, PDSystemEvent event, uint32_t arg) {
     if (event == kEventInit) {
+        object = NewEmptyObject();
+        Geometry *g = LoadObj(playdate, "models/cat_lpoly.obj");
+        object->geometry = g;
+        object->scale = 0.01f;
+        SetQuaternionValues(object->rot, 0, 1, 0, PI);
         screen = NewScreen(playdate);
         scene = NewEmptyScene();
-        cube = NewCubeObject();
-        SetV3Values(cube->pos, 0, 0, 5);
-        AddObjectToScene(scene, cube);
+        SetV3Values(object->pos, 0, -0.5f, 2);
+        AddObjectToScene(scene, object);
         camera = NewDefaultCamera();
 
         Vector3 qv = {1, 2, 3};
@@ -41,54 +46,41 @@ int eventHandler(PlaydateAPI *playdate, PDSystemEvent event, uint32_t arg) {
     return 0;
 }
 
-#define SPEED 0.05f
-#define R 2
+#define SPEED 0.2f
+#define R 3.0f
 // float scale = 1;
 static int update(void *userdata) {
     PDButtons current;
     pd->system->getButtonState(&current, NULL, NULL);
     if (current & kButtonLeft) {
-        camX -= SPEED;
+        Quaternion *left = NewZeroQuaternion();
+        SetQuaternionValues(left, 0, -1, 0, R / 180.f * R);
+        MulQuaternion(camera->rot, left);
+        free(left);
     }
     if (current & kButtonRight) {
-        camX += SPEED;
+        Quaternion *right = NewZeroQuaternion();
+        SetQuaternionValues(right, 0, 1, 0, R / 180.f * R);
+        MulQuaternion(camera->rot, right);
+        free(right);
     }
     if (current & kButtonUp) {
-        camZ += SPEED;
+        camZ += SPEED * GetCameraForward(camera)->z;
+        camX += SPEED * GetCameraForward(camera)->x;
     }
     if (current & kButtonDown) {
-        camZ -= SPEED;
+        camZ -= SPEED * GetCameraForward(camera)->z;
+        camX -= SPEED * GetCameraForward(camera)->x;
     }
 
     camera->pos->x = camX;
     camera->pos->z = camZ;
-    SetQuaternionValues(camera->rot, 1, 0, 0,
-                        pd->system->getCrankAngle() / 180.0f * PI);
 
-    MulQuaternion(cube->rot, q);
+    camera->pos->y += pd->system->getCrankChange() / 180;
+
     FillScreen(screen, 0);
     Render(scene, camera, screen);
 
-    // #define N 8
-    //     float triangles[N][6] = {{-10, -10, 0, 0, 0, -10}, {-10, 0, 0, 0,
-    //     -10, 10},
-    //                              {0, 0, 0, 10, 10, 10},    {0, 0, 10, 0, 10,
-    //                              -10},
-    //                              {-5, -5, 0, 0, 0, -5},    {-5, 0, 0, 0, -5,
-    //                              5}, {0, 0, 0, 5, 5, 5},       {0, 0, 5, 0,
-    //                              5, -5}};
-    //     scale += SPEED;
-    //     for (int i = 0; i < N; i++) {
-    //         DrawDitheredTriangle(screen, triangles[i][0] * scale +
-    //         SCREEN_WIDTH / 2,
-    //                              triangles[i][1] * scale + SCREEN_HEIGTH / 2,
-    //                              triangles[i][2] * scale + SCREEN_WIDTH / 2,
-    //                              triangles[i][3] * scale + SCREEN_HEIGTH / 2,
-    //                              triangles[i][4] * scale + SCREEN_WIDTH / 2,
-    //                              triangles[i][5] * scale + SCREEN_HEIGTH / 2,
-    //                              screen->ditherMaxBrightness * 1.0 / N * (i +
-    //                              1));
-    //     }
     DrawScreen(screen);
 
     pd->system->drawFPS(0, 0);

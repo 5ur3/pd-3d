@@ -24,6 +24,7 @@ VPATH += src
 SRC = src/main.c \
 		src/screen/screen.c \
 		src/screen/dither.c \
+		src/screen/triangle.c \
 		src/vector/vector3.c \
 		src/geometry/geometry.c \
 		src/camera/camera.c \

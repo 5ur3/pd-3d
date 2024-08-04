@@ -43,6 +43,7 @@ int eventHandler(PlaydateAPI *playdate, PDSystemEvent event, uint32_t arg) {
 
 #define SPEED 0.05f
 #define R 2
+// float scale = 1;
 static int update(void *userdata) {
     PDButtons current;
     pd->system->getButtonState(&current, NULL, NULL);
@@ -65,10 +66,29 @@ static int update(void *userdata) {
                         pd->system->getCrankAngle() / 180.0f * PI);
 
     MulQuaternion(cube->rot, q);
-
     FillScreen(screen, 0);
     Render(scene, camera, screen);
 
+    // #define N 8
+    //     float triangles[N][6] = {{-10, -10, 0, 0, 0, -10}, {-10, 0, 0, 0,
+    //     -10, 10},
+    //                              {0, 0, 0, 10, 10, 10},    {0, 0, 10, 0, 10,
+    //                              -10},
+    //                              {-5, -5, 0, 0, 0, -5},    {-5, 0, 0, 0, -5,
+    //                              5}, {0, 0, 0, 5, 5, 5},       {0, 0, 5, 0,
+    //                              5, -5}};
+    //     scale += SPEED;
+    //     for (int i = 0; i < N; i++) {
+    //         DrawDitheredTriangle(screen, triangles[i][0] * scale +
+    //         SCREEN_WIDTH / 2,
+    //                              triangles[i][1] * scale + SCREEN_HEIGTH / 2,
+    //                              triangles[i][2] * scale + SCREEN_WIDTH / 2,
+    //                              triangles[i][3] * scale + SCREEN_HEIGTH / 2,
+    //                              triangles[i][4] * scale + SCREEN_WIDTH / 2,
+    //                              triangles[i][5] * scale + SCREEN_HEIGTH / 2,
+    //                              screen->ditherMaxBrightness * 1.0 / N * (i +
+    //                              1));
+    //     }
     DrawScreen(screen);
 
     pd->system->drawFPS(0, 0);

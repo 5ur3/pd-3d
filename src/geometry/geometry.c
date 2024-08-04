@@ -1,6 +1,22 @@
 #include "geometry.h"
 #include <stdlib.h>
 
+Geometry EmptyGeometry = {};
+Geometry CubeGeometry = {};
+
+Geometry *NewEmptyGeometry(void) {
+    Geometry *g = (Geometry *)malloc(sizeof(Geometry));
+    g->vCount = 0;
+    g->fCount = 0;
+    return g;
+}
+
+void SetGeometryFace(GeometryFace *face, uint16_t a, uint16_t b, uint16_t c) {
+    face->a = a;
+    face->b = b;
+    face->c = c;
+}
+
 // Verticies:
 // 0: 0 0 0
 // 1: 1 0 0
@@ -17,8 +33,8 @@
 // 2, 3, 6, 7 :: 2, 3, 6 + 3, 6, 7
 // 0, 2, 4, 6 :: 0, 2, 4 + 2, 4, 6
 // 1, 3, 5, 7 :: 1, 3, 5 + 3, 5, 7
-Geometry *NewCubeGeometry() {
-    Geometry *g = (Geometry *)malloc(sizeof(Geometry));
+Geometry *NewCubeGeometry(void) {
+    Geometry *g = NewEmptyGeometry();
     g->vCount = 8;
     g->v = (Vector3 *)malloc(sizeof(Vector3) * 8);
     for (int i = 0; i < 8; i++) {
@@ -49,8 +65,8 @@ Geometry *NewCubeGeometry() {
     return g;
 }
 
-void SetGeometryFace(GeometryFace *face, uint16_t a, uint16_t b, uint16_t c) {
-    face->a = a;
-    face->b = b;
-    face->c = c;
+void InitDefaultGeometry(void) {
+    if (CubeGeometry.vCount == 0) {
+        CubeGeometry = *NewCubeGeometry();
+    }
 }

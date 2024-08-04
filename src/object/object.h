@@ -17,6 +17,7 @@ typedef struct Object {
     float scale;
 } Object;
 
+Object *NewEmptyObject(void);
 Object *NewCubeObject(void);
 Vector3 *GetObjectVerticies(Object *o);
 uint16_t GetObjectVerticiesCount(Object *o);

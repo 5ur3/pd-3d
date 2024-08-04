@@ -10,7 +10,8 @@ typedef struct Screen {
     LCDBitmap *lcdbm;
     uint8_t *bm;
     PlaydateAPI *pd;
-    uint16_t ditherMap[SCREEN_HEIGTH][SCREEN_WIDTH];
+    uint16_t *ditherMap;
+    uint16_t ditherMapSize;
     uint16_t ditherMaxBrightness;
 } Screen;
 

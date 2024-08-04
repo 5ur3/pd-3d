@@ -3,13 +3,20 @@
 #include "../vector/vector3.h"
 #include <stdlib.h>
 
-Object *NewCubeObject() {
+Object *NewEmptyObject() {
     Object *o = (Object *)malloc(sizeof(Object));
-    o->geometry = NewCubeGeometry();
+    o->geometry = &EmptyGeometry;
     o->pos = NewZeroV3();
     o->rot = NewZeroQuaternion();
     o->scale = 1;
     o->cache.verticies = NULL;
+    return o;
+}
+
+Object *NewCubeObject() {
+    InitDefaultGeometry();
+    Object *o = NewEmptyObject();
+    o->geometry = &CubeGeometry;
     return o;
 }
 

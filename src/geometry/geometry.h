@@ -7,8 +7,6 @@ typedef struct GeometryFace {
     uint16_t a, b, c;
 } GeometryFace;
 
-void SetGeometryFace(GeometryFace *face, uint16_t a, uint16_t b, uint16_t c);
-
 typedef struct Geometry {
     uint16_t vCount;
     Vector3 *v;
@@ -16,7 +14,10 @@ typedef struct Geometry {
     GeometryFace *f;
 } Geometry;
 
-Geometry *NewCubeGeometry(void);
+extern Geometry CubeGeometry;
+extern Geometry EmptyGeometry;
+
+void InitDefaultGeometry(void);
 
 #define __GEOMETRY
 #endif

@@ -14,7 +14,7 @@ uint16_t **makeSquaredBayerDither(uint16_t rank) {
     uint16_t side = 1 << rank;
     uint16_t **buffer = (uint16_t **)malloc(sizeof(uint16_t *) * side);
     for (int i = 0; i < side; i++) {
-        buffer[i] = (uint16_t *)malloc(sizeof(uint16_t));
+        buffer[i] = (uint16_t *)malloc(sizeof(uint16_t) * side);
     }
 
     if (rank == 0) {
@@ -53,17 +53,21 @@ uint16_t **makeSquaredBayerDither(uint16_t rank) {
 void setSquaredBayerDither(Screen *s, uint16_t rank) {
     uint16_t **buffer = makeSquaredBayerDither(rank);
     uint16_t side = 1 << rank;
-    for (short y = 0; y < SCREEN_HEIGTH; y++) {
-        for (short x = 0; x < SCREEN_WIDTH; x++) {
-            s->ditherMap[y][x] = buffer[x % side][y % side];
+    s->ditherMaxBrightness = 1 << (rank * 2);
+    s->ditherMap =
+        (uint16_t *)malloc(sizeof(uint16_t) * s->ditherMaxBrightness);
+    for (short y = 0; y < side; y++) {
+        for (short x = 0; x < side; x++) {
+            s->ditherMap[y * side + x] = buffer[y][x];
         }
     }
-    s->ditherMaxBrightness = 1 << (rank * 2);
+    s->ditherMapSize = side;
     deleteSquaredBayerDither(buffer, rank);
 }
 
 void SetDitheredPixel(Screen *s, short x, short y, uint16_t brighness) {
-    if (brighness > s->ditherMap[y][x]) {
+    if (brighness >
+        s->ditherMap[(y * s->ditherMapSize + x) % s->ditherMaxBrightness]) {
         SetPixel(s, x, y, 1);
     } else {
         SetPixel(s, x, y, 0);
